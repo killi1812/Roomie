@@ -1,4 +1,4 @@
-package routes
+package auth
 
 import (
 	"fmt"
@@ -18,4 +18,8 @@ func CreateRoute() {
 
 func ping(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	fmt.Fprintf(w, "%s", ps.ByName("name"))
+}
+
+func login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+
 }

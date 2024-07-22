@@ -1,9 +1,8 @@
 package main
 
-import (
-	"chatapp/server/routes"
-)
+import auth "chatapp/server/routes"
+import _ "chatapp/server/docs"
 
 func main() {
-	routes.CreateRoute()
+	auth.CreateRoute()
 }
