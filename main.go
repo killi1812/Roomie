@@ -1,5 +1,9 @@
 package main
 
+import (
+	"chatapp/server/routes"
+)
+
 func main() {
-	print("bokic")
+	routes.CreateRoute()
 }
