@@ -23,3 +23,7 @@ func ping(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 func login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 }
+
+func register(w http.w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
+  
+}
