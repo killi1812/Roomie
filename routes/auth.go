@@ -1,13 +1,15 @@
-package auth
+package routes 
 
 import (
 	"fmt"
 	"net/http"
+  "encoding/json"
+  "html/template"
 
 	"github.com/julienschmidt/httprouter"
 )
 
-func CreateRoute() {
+func AuthRoute() {
 	router := httprouter.New()
 	port := 8832
 
@@ -17,13 +19,15 @@ func CreateRoute() {
 }
 
 func ping(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-  fmt.Fprintf(w, "Pong")
+  json.NewEncoder(w).Encode("Pong")
+  //  fmt.Fprintf(w, "Pong")
 }
 
 func login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 }
 
-func register(w http.w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
+func register(w http.ResponseWriter, r *http.Request, ps httprouter.Params)  {
+  tmpl := template.Mustl(template.) 
   
 }
