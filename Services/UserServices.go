@@ -50,21 +50,25 @@ func CreateUser(dto dtos.NewUserDto) (models.User, error) {
 	return Helpers.MapNewUserDtoToUser(dto), nil
 }
 
-func Login(dto dtos.UserAuthDto) (models.User, error) {
+func Login(dto dtos.UserAuthDto) (models.Certificate, error) {
 	users, err := LoadUsers()
 	if err != nil {
 		fmt.Println("Error loading users")
-		return models.User{}, err
+		return models.Certificate{}, err
 	}
 
 	for _, user := range users {
 		if user.Username == dto.Username {
 			if Helpers.CheckPasswordHash(dto.Password, user.Password) {
-				return user, nil
+				cert, err := GenerateCertificate(user)
+				if err != nil {
+					return models.Certificate{}, err
+				}
+				return cert, nil
 			}
 		}
 	}
-	return models.User{}, fmt.Errorf("User %s not found", dto.Username)
+	return models.Certificate{}, fmt.Errorf("User %s not found", dto.Username)
 }
 
 func LoadUsers() (users []models.User, err error) {

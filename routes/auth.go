@@ -9,8 +9,10 @@ import (
 	"net/http"
 )
 
-func AuthRoute(router *httprouter.Router) {
+func AddRoutes(router *httprouter.Router) {
 	router.GET("/auth/ping", ping)
+	router.GET("/auth/public-key", getPublicKey)
+	router.GET("/auth/verify-certificate", verifyCertificate)
 	router.POST("/auth/login", login)
 	router.POST("/auth/register", register)
 }
@@ -28,14 +30,18 @@ func login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		return
 	}
 
-	user, err := Services.Login(userAuth)
+	cert, err := Services.Login(userAuth)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(fmt.Sprintf("User %s logged in successfully", user.Username))
+	json.NewEncoder(w).Encode(
+		map[string]interface{}{
+			"message":     fmt.Sprintf("User %s logged in successfully", cert.Username),
+			"certificate": cert,
+		})
 }
 
 func register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -54,4 +60,12 @@ func register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(fmt.Sprintf("User %s created successfully", user.Username))
+}
+
+func getPublicKey(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	//TODO implement
+}
+
+func verifyCertificate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	//TODO implement
 }
