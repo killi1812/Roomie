@@ -26,12 +26,6 @@ func CreateUser(dto dtos.NewUserDto) (models.User, error) {
 			return models.User{}, fmt.Errorf("User %s already exists", dto.Username)
 		}
 	}
-
-	if err != nil {
-		fmt.Println("Error opening a file a user")
-		return models.User{}, err
-	}
-
 	//TODO move to a better system
 	if err != nil {
 		fmt.Println("Error loading users")
@@ -42,9 +36,9 @@ func CreateUser(dto dtos.NewUserDto) (models.User, error) {
 		fmt.Println("Error hashing a password")
 		return models.User{}, err
 	}
-
 	file, err := os.Create(fileName)
 	defer file.Close()
+
 	dto.Password = hashedPassword
 	users = append(users, Helpers.MapNewUserDtoToUser(dto))
 	encoder := json.NewEncoder(file)
