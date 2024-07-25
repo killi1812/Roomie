@@ -21,7 +21,21 @@ func ping(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var userAuth dtos.UserAuthDto
+	err := json.NewDecoder(r.Body).Decode(&userAuth)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 
+	user, err := Services.Login(userAuth)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(fmt.Sprintf("User %s logged in successfully", user.Username))
 }
 
 func register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
