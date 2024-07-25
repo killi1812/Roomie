@@ -20,28 +20,31 @@ const fileName = "users.json"
 func CreateUser(dto dtos.NewUserDto) (models.User, error) {
 	//TODO check if user already exists
 	//TODO check if email is valid
-	file, err := os.Create(fileName)
-	if err != nil {
-		fmt.Println("Error creating a user")
-		return models.User{}, err
-	}
-	defer file.Close()
-
-	//TODO move to a better system
-	var users []models.User
-	json.NewDecoder(file).Decode(&users)
+	users, err := LoadUsers()
 	for _, user := range users {
 		if user.Username == dto.Username {
 			return models.User{}, fmt.Errorf("User %s already exists", dto.Username)
 		}
 	}
-	hashedPassword, err := Helpers.HashPassword(dto.Password)
 
+	if err != nil {
+		fmt.Println("Error opening a file a user")
+		return models.User{}, err
+	}
+
+	//TODO move to a better system
+	if err != nil {
+		fmt.Println("Error loading users")
+		return models.User{}, err
+	}
+	hashedPassword, err := Helpers.HashPassword(dto.Password)
 	if err != nil {
 		fmt.Println("Error hashing a password")
 		return models.User{}, err
 	}
 
+	file, err := os.Create(fileName)
+	defer file.Close()
 	dto.Password = hashedPassword
 	users = append(users, Helpers.MapNewUserDtoToUser(dto))
 	encoder := json.NewEncoder(file)
@@ -54,18 +57,9 @@ func CreateUser(dto dtos.NewUserDto) (models.User, error) {
 }
 
 func Login(dto dtos.UserAuthDto) (models.User, error) {
-	file, err := os.Open(fileName)
+	users, err := LoadUsers()
 	if err != nil {
-		fmt.Println("Error opening a file")
-		return models.User{}, err
-	}
-	defer file.Close()
-
-	decoder := json.NewDecoder(file)
-	var users []models.User
-	err = decoder.Decode(&users)
-	if err != nil {
-		fmt.Println("Error decoding a file")
+		fmt.Println("Error loading users")
 		return models.User{}, err
 	}
 
@@ -77,4 +71,20 @@ func Login(dto dtos.UserAuthDto) (models.User, error) {
 		}
 	}
 	return models.User{}, fmt.Errorf("User %s not found", dto.Username)
+}
+
+func LoadUsers() (users []models.User, err error) {
+	file, err := os.Open(fileName)
+	if err != nil {
+		return []models.User{}, nil
+	}
+	defer file.Close()
+
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&users)
+	if err != nil {
+		fmt.Println("Error decoding a file")
+		return []models.User{}, err
+	}
+	return users, nil
 }
