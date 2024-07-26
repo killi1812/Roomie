@@ -10,11 +10,12 @@ import (
 )
 
 func AddRoutes(router *httprouter.Router) {
-	router.GET("/auth/ping", ping)
-	router.GET("/auth/public-key", getPublicKey)
-	router.GET("/auth/verify-certificate", verifyCertificate)
-	router.POST("/auth/login", login)
-	router.POST("/auth/register", register)
+	baseRout := "api/v1/auth"
+	router.GET(fmt.Sprintf("%s/ping", baseRout), ping)
+	router.GET(fmt.Sprintf("%s/public-key", baseRout), getPublicKey)
+	router.GET(fmt.Sprintf("%s/verify-certificate"), verifyCertificate)
+	router.POST(fmt.Sprintf("%s/login"), login)
+	router.POST(fmt.Sprintf("%s/register"), register)
 }
 
 func ping(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
