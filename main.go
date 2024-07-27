@@ -11,7 +11,7 @@ import (
 func main() {
 	err := Services.GenerateKeyPair()
 	if err != nil {
-		fmt.Println("Error generating private and public keys\n %s", err)
+		fmt.Println("Error generating private and public keys\n", err)
 		return
 	}
 	router := httprouter.New()

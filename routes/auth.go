@@ -3,6 +3,7 @@ package routes
 import (
 	"chatapp/server/Services"
 	"chatapp/server/dtos"
+	"chatapp/server/models"
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
@@ -10,12 +11,12 @@ import (
 )
 
 func AddRoutes(router *httprouter.Router) {
-	baseRout := "api/v1/auth"
+	baseRout := "/api/v1/auth"
 	router.GET(fmt.Sprintf("%s/ping", baseRout), ping)
 	router.GET(fmt.Sprintf("%s/public-key", baseRout), getPublicKey)
-	router.GET(fmt.Sprintf("%s/verify-certificate"), verifyCertificate)
-	router.POST(fmt.Sprintf("%s/login"), login)
-	router.POST(fmt.Sprintf("%s/register"), register)
+	router.GET(fmt.Sprintf("%s/verify-certificate", baseRout), verifyCertificate)
+	router.POST(fmt.Sprintf("%s/login", baseRout), login)
+	router.POST(fmt.Sprintf("%s/register", baseRout), register)
 }
 
 func ping(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -64,9 +65,29 @@ func register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func getPublicKey(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	//TODO implement
+	key, err := Services.LoadPublicKey()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(key)
 }
 
 func verifyCertificate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	//TODO implement
+	//TODO Does not read data from request body
+	var cert models.Certificate
+	body := make([]byte, r.ContentLength)
+	r.Body.Read(body)
+	err := json.Unmarshal(body, &cert)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	err = Services.VerifyCertificate(cert)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode("Certificate verified")
 }

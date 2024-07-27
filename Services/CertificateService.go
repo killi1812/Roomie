@@ -19,12 +19,14 @@ const privateKeyPath = "private_key.pem"
 const publicKeyPath = "public_key.pem"
 
 func GenerateKeyPair() error {
+
 	_, err := os.Stat(privateKeyPath)
 	_, err2 := os.Stat(publicKeyPath)
 	if err != nil && err2 != nil {
 		return fmt.Errorf("keys already exist")
 	}
 
+	os.Mkdir("keys", 0755)
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2047)
 	if err != nil {
 		return err
@@ -63,14 +65,9 @@ func LoadPublicKey() (*rsa.PublicKey, error) {
 		return nil, fmt.Errorf("failed to decode PEM block containing public key")
 	}
 
-	publicKey, err := x509.ParsePKIXPublicKey(block.Bytes)
+	rsaPubKey, err := x509.ParsePKCS1PublicKey(block.Bytes)
 	if err != nil {
 		return nil, err
-	}
-
-	rsaPubKey, ok := publicKey.(*rsa.PublicKey)
-	if !ok {
-		return nil, fmt.Errorf("not an RSA public key")
 	}
 
 	return rsaPubKey, nil
