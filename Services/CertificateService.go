@@ -15,18 +15,22 @@ import (
 	"time"
 )
 
-const privateKeyPath = "private_key.pem"
-const publicKeyPath = "public_key.pem"
+const privateKeyPath = "keys/private_key.pem"
+const publicKeyPath = "keys/public_key.pem"
 
 func GenerateKeyPair() error {
 
 	_, err := os.Stat(privateKeyPath)
 	_, err2 := os.Stat(publicKeyPath)
-	if err != nil && err2 != nil {
-		return fmt.Errorf("keys already exist")
+	if err == nil && err2 == nil {
+		return nil
+		//	return fmt.Errorf("keys already exist")
+	}
+	_, err = os.Stat("keys")
+	if os.IsNotExist(err) {
+		os.Mkdir("keys", 0666)
 	}
 
-	os.Mkdir("keys", 0755)
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2047)
 	if err != nil {
 		return err
