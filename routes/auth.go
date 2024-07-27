@@ -74,7 +74,6 @@ func getPublicKey(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func verifyCertificate(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	//TODO Does not read data from request body
 	var cert models.Certificate
 	body := make([]byte, r.ContentLength)
 	r.Body.Read(body)

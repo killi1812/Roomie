@@ -130,14 +130,15 @@ func VerifyCertificate(cert models.Certificate) error {
 	if err != nil {
 		return err
 	}
-
+	signature := cert.Signature
+	cert.Signature = nil
 	certData, err := json.Marshal(cert)
 	if err != nil {
 		return err
 	}
 
 	hash := sha256.Sum256(certData)
-	err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, hash[:], cert.Signature)
+	err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, hash[:], signature)
 	if err != nil {
 		return fmt.Errorf("certificate verification failed: %v", err)
 	}
