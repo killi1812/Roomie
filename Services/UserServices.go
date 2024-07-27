@@ -6,6 +6,7 @@ import (
 	"chatapp/server/models"
 	"encoding/json"
 	"fmt"
+	"github.com/google/uuid"
 	"os"
 )
 
@@ -40,7 +41,9 @@ func CreateUser(dto dtos.NewUserDto) (models.User, error) {
 	defer file.Close()
 
 	dto.Password = hashedPassword
-	users = append(users, Helpers.MapNewUserDtoToUser(dto))
+	user := Helpers.MapNewUserDtoToUser(dto)
+	user.Uuid = uuid.New()
+	users = append(users, user)
 	encoder := json.NewEncoder(file)
 	err = encoder.Encode(users)
 	if err != nil {
