@@ -14,14 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      - name : CD to Auth
+        run: cd Roomko_auth
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
           go-version: "1.22"
 
       - name: Build
-        run: go build -v ./Roomko_auth/...
+        run: go build -v ./...
 
       - name: Test
-        run: go test -v ./Roomko_auth/...
+        run: go test -v ./...
