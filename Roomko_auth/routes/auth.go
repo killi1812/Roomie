@@ -10,13 +10,13 @@ import (
 	"roomko/auth/models"
 )
 
-func AddRoutes(router *httprouter.Router) {
-	baseRout := "/api/v1/auth"
-	router.GET(fmt.Sprintf("%s/ping", baseRout), ping)
-	router.GET(fmt.Sprintf("%s/public-key", baseRout), getPublicKey)
-	router.GET(fmt.Sprintf("%s/verify-certificate", baseRout), verifyCertificate)
-	router.POST(fmt.Sprintf("%s/login", baseRout), login)
-	router.POST(fmt.Sprintf("%s/register", baseRout), register)
+func AuthAddRoutes(router *httprouter.Router) {
+	baseRoute := "/api/v1/auth"
+	router.GET(fmt.Sprintf("%s/ping", baseRoute), ping)
+	router.GET(fmt.Sprintf("%s/public-key", baseRoute), getPublicKey)
+	router.GET(fmt.Sprintf("%s/verify-certificate", baseRoute), verifyCertificate)
+	router.POST(fmt.Sprintf("%s/login", baseRoute), login)
+	router.POST(fmt.Sprintf("%s/register", baseRoute), register)
 }
 
 func ping(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {

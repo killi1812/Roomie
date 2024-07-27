@@ -15,7 +15,8 @@ func main() {
 		return
 	}
 	router := httprouter.New()
-	auth.AddRoutes(router)
+	auth.AuthAddRoutes(router)
+	auth.PagesAddRoutes(router)
 	port := 8832
 	http.ListenAndServe(fmt.Sprintf(":%d", port), router)
 }
