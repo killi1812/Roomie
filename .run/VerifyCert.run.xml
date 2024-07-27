@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="VerifyCert" type="ShConfigurationType">
+    <option name="SCRIPT_TEXT" value="LOGIN_RESPONSE=$(curl -s -X POST http://localhost:8832/api/v1/auth/login \ -H &quot;Content-Type: application/json&quot; \ -d &quot;{\&quot;username\&quot;:\&quot;TestUser\&quot;, \&quot;password\&quot;:\&quot;Pa$$w0rd\&quot;}&quot;) curl -s -X POST http://localhost:8080/api/v1/auth/verify-certificate \ -H &quot;Content-Type: application/json&quot; \ -d &quot;{\&quot;certificate\&quot;:$CERTIFICATE}&quot;" />
+    <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+    <option name="SCRIPT_PATH" value="$PROJECT_DIR$/Roomko_auth/Tests/CertTest.sh" />
+    <option name="SCRIPT_OPTIONS" value="" />
+    <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+    <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+    <option name="INTERPRETER_PATH" value="/bin/zsh" />
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="EXECUTE_IN_TERMINAL" value="true" />
+    <option name="EXECUTE_SCRIPT_FILE" value="true" />
+    <envs />
+    <method v="2" />
+  </configuration>
+</component>
