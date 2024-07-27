@@ -1,11 +1,11 @@
 package main
 
 import (
-	"chatapp/server/Services"
-	auth "chatapp/server/routes"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
+	"roomko/auth/Services"
+	auth "roomko/auth/routes"
 )
 
 func main() {

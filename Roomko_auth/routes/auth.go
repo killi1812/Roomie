@@ -1,13 +1,13 @@
 package routes
 
 import (
-	"chatapp/server/Services"
-	"chatapp/server/dtos"
-	"chatapp/server/models"
 	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
+	"roomko/auth/Services"
+	"roomko/auth/dtos"
+	"roomko/auth/models"
 )
 
 func AddRoutes(router *httprouter.Router) {

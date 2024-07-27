@@ -1,13 +1,13 @@
 package Services
 
 import (
-	"chatapp/server/Helpers"
-	"chatapp/server/dtos"
-	"chatapp/server/models"
 	"encoding/json"
 	"fmt"
 	"github.com/google/uuid"
 	"os"
+	"roomko/auth/Helpers"
+	"roomko/auth/dtos"
+	"roomko/auth/models"
 )
 
 type UserService interface {

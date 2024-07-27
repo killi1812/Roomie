@@ -1,8 +1,6 @@
 package Services
 
 import (
-	"chatapp/server/Helpers"
-	"chatapp/server/models"
 	"crypto"
 	"crypto/rand"
 	"crypto/rsa"
@@ -12,6 +10,8 @@ import (
 	"encoding/pem"
 	"fmt"
 	"os"
+	"roomko/auth/Helpers"
+	"roomko/auth/models"
 	"time"
 )
 

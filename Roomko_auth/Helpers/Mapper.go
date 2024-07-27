@@ -1,8 +1,8 @@
 package Helpers
 
 import (
-	"chatapp/server/dtos"
-	"chatapp/server/models"
+	"roomko/auth/dtos"
+	"roomko/auth/models"
 )
 
 func MapNewUserDtoToUser(dto dtos.NewUserDto) models.User {
