@@ -30,7 +30,6 @@
             e.preventDefault()
             const username = document.getElementById("username").value
             const password = document.getElementById("password").value
-            console.log(JSON.stringify({username, password}))
             fetch(form.action, {
                 method: form.method,
                 headers: {
@@ -38,7 +37,7 @@
                 },
                 body: JSON.stringify({username, password})
             }).then(res => {
-                if (res.status !== 200) {
+                if ((res.status / 100).toFixed(0) != 2) {
                     alert("Invalid username or password")
                 } else {
                     return res.json()

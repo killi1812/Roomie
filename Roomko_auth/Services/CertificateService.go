@@ -22,13 +22,13 @@ func GenerateKeyPair() error {
 
 	_, err := os.Stat(privateKeyPath)
 	_, err2 := os.Stat(publicKeyPath)
-	if err == nil && err2 == nil {
+	if !os.IsNotExist(err) && !os.IsNotExist(err2) {
 		return nil
 		//	return fmt.Errorf("keys already exist")
 	}
 	_, err = os.Stat("keys")
 	if os.IsNotExist(err) {
-		os.Mkdir("keys", 0666)
+		os.Mkdir("keys", 0755)
 	}
 
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2047)

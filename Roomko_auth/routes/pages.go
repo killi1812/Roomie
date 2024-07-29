@@ -14,6 +14,16 @@ func PagesAddRoutes(router *httprouter.Router) {
 	router.GET("/index.html", reroute)
 	//TODO rename functions in auth.go
 	router.GET(fmt.Sprintf("%s/login", baseRoute), loginPage)
+	router.GET(fmt.Sprintf("%s/register", baseRoute), registerPage)
+	router.GET(fmt.Sprintf("%s/index", baseRoute), navigationPage)
+}
+
+func navigationPage(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	http.ServeFile(w, r, filepath.Join("wwwroot", "Index.html"))
+}
+
+func registerPage(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	http.ServeFile(w, r, filepath.Join("wwwroot", "Auth", "Register.html"))
 }
 
 func loginPage(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -21,5 +31,5 @@ func loginPage(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 }
 
 func reroute(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	http.Redirect(w, r, "/gui/v1/index.html", http.StatusFound)
+	http.Redirect(w, r, "/gui/v1/index", http.StatusFound)
 }
