@@ -10,14 +10,14 @@ services:
     networks:
       - roomko_network
 
-  roomko_server:
-    build:
-      context: ./Roomko_server
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    networks:
-      - roomko_network
+#  roomko_server:
+#    build:
+#      context: ./Roomko_server
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - roomko_network
 
 networks:
   roomko_network:
