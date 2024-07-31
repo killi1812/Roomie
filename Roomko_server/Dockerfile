@@ -1,6 +1,5 @@
 FROM ubuntu:latest
 LABEL authors="fran"
-
 ENTRYPOINT ["top", "-b"]
 
 FROM golang:1.20-alpine

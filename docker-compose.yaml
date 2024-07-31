@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  roomko_auth:
+    build:
+      context: ./Roomko_auth
+      dockerfile: Dockerfile
+    ports:
+      - "8832:8832"
+    networks:
+      - roomko_network
+
+  roomko_server:
+    build:
+      context: ./Roomko_server
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - roomko_network
+
+networks:
+  roomko_network:
+    driver: bridge
