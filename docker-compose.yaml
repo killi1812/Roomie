@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   roomko_auth:
@@ -10,15 +10,21 @@ services:
     networks:
       - roomko_network
 
-#  roomko_server:
-#    build:
-#      context: ./Roomko_server
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8080:8080"
-#    networks:
-#      - roomko_network
+  #  roomko_server:
+  #    build:
+  #      context: ./Roomko_server
+  #      dockerfile: Dockerfile
+  #    ports:
+  #      - "8080:8080"
+  #    networks:
+  #      - roomko_network
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
 
 networks:
   roomko_network:
     driver: bridge
+
