@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
+	"roomko/auth/Helpers"
 	"roomko/auth/Services"
 	auth "roomko/auth/routes"
 )
@@ -17,11 +18,12 @@ func main() {
 	router := httprouter.New()
 	auth.AuthAddRoutes(router)
 	auth.PagesAddRoutes(router)
-	port := 8832
-	err = http.ListenAndServeTLS(fmt.Sprintf(":%d", port), "keys/Https_cert.pem", "keys/Https_key.pem", router)
+	config := Helpers.GetConfig()
+	err = http.ListenAndServeTLS(fmt.Sprintf(":%d", config.Port), "keys/Https_cert.pem", "keys/Https_key.pem", router)
 
 	if err != nil {
 		fmt.Println("Error starting server\n", err)
-		http.ListenAndServe(fmt.Sprintf(":%d", port), router)
+		fmt.Println("listening on http port", config.Port)
+		http.ListenAndServe(fmt.Sprintf(":%d", config.Port), router)
 	}
 }

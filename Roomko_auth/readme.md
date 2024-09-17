@@ -17,3 +17,4 @@ Roomko authentication services is a microservice that provides authentication se
 - [ ] Create Simple UI for Forgot Password
 - [ ] Change Username, Password, Email 
 - [x] Add docker file
+- [ ] Add logging service
