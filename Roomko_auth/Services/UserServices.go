@@ -1,9 +1,12 @@
 package Services
 
 import (
+	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"os"
 	"roomko/auth/Helpers"
 	"roomko/auth/dtos"
@@ -11,17 +14,19 @@ import (
 )
 
 type UserService interface {
-	CreateUser(dto dtos.NewUserDto)
-	Login(dto dtos.UserAuthDto)
+	CreateUser(dto dtos.NewUserDto) (models.User, error)
+	Login(dto dtos.UserAuthDto) (models.Certificate, error)
 }
 
-// TODO make a struct
 const fileName = "users.json"
 
-func CreateUser(dto dtos.NewUserDto) (models.User, error) {
+type FileDb struct {
+}
+
+func (_ FileDb) CreateUser(dto dtos.NewUserDto) (models.User, error) {
 	//TODO check if user already exists
 	//TODO check if email is valid
-	users, err := LoadUsers()
+	users, err := loadUsers()
 	for _, user := range users {
 		if user.Username == dto.Username {
 			return models.User{}, fmt.Errorf("User %s already exists", dto.Username)
@@ -37,24 +42,22 @@ func CreateUser(dto dtos.NewUserDto) (models.User, error) {
 		fmt.Println("Error hashing a password")
 		return models.User{}, err
 	}
+	user := models.NewUser(dto, hashedPassword)
+	users = append(users, user)
+
 	file, err := os.Create(fileName)
 	defer file.Close()
-
-	dto.Password = hashedPassword
-	user := Helpers.MapNewUserDtoToUser(dto)
-	user.Uuid = uuid.New()
-	users = append(users, user)
 	encoder := json.NewEncoder(file)
 	err = encoder.Encode(users)
 	if err != nil {
 		fmt.Println("Error encoding a user")
 		return models.User{}, err
 	}
-	return Helpers.MapNewUserDtoToUser(dto), nil
+	return user, nil
 }
 
-func Login(dto dtos.UserAuthDto) (models.Certificate, error) {
-	users, err := LoadUsers()
+func (_ FileDb) Login(dto dtos.UserAuthDto) (models.Certificate, error) {
+	users, err := loadUsers()
 	if err != nil {
 		fmt.Println("Error loading users")
 		return models.Certificate{}, err
@@ -74,7 +77,7 @@ func Login(dto dtos.UserAuthDto) (models.Certificate, error) {
 	return models.Certificate{}, fmt.Errorf("User %s not found", dto.Username)
 }
 
-func LoadUsers() (users []models.User, err error) {
+func loadUsers() (users []models.User, err error) {
 	file, err := os.Open(fileName)
 	if err != nil {
 		return []models.User{}, nil
@@ -88,4 +91,61 @@ func LoadUsers() (users []models.User, err error) {
 		return []models.User{}, err
 	}
 	return users, nil
+}
+
+type mongoDb struct {
+}
+
+func GetUser(username string) (user models.User, err error) {
+	conn, closeConn := Helpers.GetConnect()
+	defer closeConn()
+	dbName := Helpers.GetConfig().DbName
+	coll := conn.Database(dbName).Collection("Users")
+
+	err = coll.FindOne(context.TODO(), bson.D{{"username", username}}).Decode(&user)
+
+	if errors.Is(err, mongo.ErrNoDocuments) {
+		//TODO remove after debugging
+		fmt.Printf("no user")
+		return models.User{}, err
+	}
+
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(user)
+	return
+}
+
+func InsertUser(user models.User) error {
+	conn, closeConn := Helpers.GetConnect()
+	defer closeConn()
+	dbName := Helpers.GetConfig().DbName
+	coll := conn.Database(dbName).Collection("Users")
+
+	_, err := coll.InsertOne(context.TODO(), user)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (_ mongoDb) CreateUser(dto dtos.NewUserDto) (models.User, error) {
+	_, err := GetUser(dto.Username)
+	if !errors.Is(err, mongo.ErrNoDocuments) {
+		return models.User{}, fmt.Errorf("User %s already exists", dto.Username)
+	}
+	hashedPassword, err := Helpers.HashPassword(dto.Password)
+	if err != nil {
+		fmt.Println("Error hashing a password")
+		return models.User{}, err
+	}
+	user := models.NewUser(dto, hashedPassword)
+	if err = InsertUser(user); err != nil {
+		return models.User{}, err
+	}
+	return user, nil
+}
+func (_ mongoDb) Login(dto dtos.UserAuthDto) (models.Certificate, error) {
+	return models.Certificate{}, nil
 }

@@ -7,7 +7,9 @@ import (
 )
 
 type Config struct {
-	Port int `json:"port"`
+	Port         int    `json:"port"`
+	DbConnString string `json:"dbConnString"`
+	DbName       string `json:"dbName"`
 	//TODO add more configs
 }
 
@@ -47,7 +49,9 @@ func GetConfig() *Config {
 
 func createMockConfig() {
 	config := Config{
-		Port: 8832,
+		Port:         8832,
+		DbConnString: "mongodb://localhost:27017",
+		DbName:       "RoomkoAuth",
 	}
 	data, err := json.Marshal(config)
 

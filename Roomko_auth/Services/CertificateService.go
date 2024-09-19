@@ -76,6 +76,7 @@ func LoadPublicKey() (*rsa.PublicKey, error) {
 
 	return rsaPubKey, nil
 }
+
 func LoadPrivateKey() (*rsa.PrivateKey, error) {
 	privateKeyFile, err := os.Open(privateKeyPath)
 	if err != nil {

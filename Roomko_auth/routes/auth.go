@@ -19,6 +19,8 @@ func AuthAddRoutes(router *httprouter.Router) {
 	router.POST(fmt.Sprintf("%s/register", baseRoute), register)
 }
 
+var userService Services.UserService = Services.FileDb{}
+
 func ping(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode("Pong")
@@ -31,8 +33,7 @@ func login(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	cert, err := Services.Login(userAuth)
+	cert, err := userService.Login(userAuth)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -54,7 +55,7 @@ func register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		return
 	}
 
-	user, err := Services.CreateUser(newUser)
+	user, err := userService.CreateUser(newUser)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
