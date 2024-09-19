@@ -147,5 +147,6 @@ func (_ mongoDb) CreateUser(dto dtos.NewUserDto) (models.User, error) {
 	return user, nil
 }
 func (_ mongoDb) Login(dto dtos.UserAuthDto) (models.Certificate, error) {
+	//TODO implement
 	return models.Certificate{}, nil
 }
