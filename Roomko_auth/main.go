@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/julienschmidt/httprouter"
 	"net/http"
 	"roomko/auth/Helpers"
 	"roomko/auth/Services"
 	auth "roomko/auth/routes"
+
+	"github.com/julienschmidt/httprouter"
 )
 
 func main() {
@@ -19,6 +20,7 @@ func main() {
 	auth.AuthAddRoutes(router)
 	auth.PagesAddRoutes(router)
 	config := Helpers.GetConfig()
+
 	fmt.Println("Server is starting")
 	err = http.ListenAndServeTLS(fmt.Sprintf(":%d", config.Port), "keys/Https_cert.pem", "keys/Https_key.pem", router)
 

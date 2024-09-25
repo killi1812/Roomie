@@ -93,9 +93,10 @@ func loadUsers() (users []models.User, err error) {
 	return users, nil
 }
 
-type mongoDb struct {
+type MongoDb struct {
 }
 
+// TODO check if it needs to be an extenstion
 func GetUser(username string) (user models.User, err error) {
 	conn, closeConn := Helpers.GetConnect()
 	defer closeConn()
@@ -117,7 +118,7 @@ func GetUser(username string) (user models.User, err error) {
 	return
 }
 
-func InsertUser(user models.User) error {
+func insertUser(user models.User) error {
 	conn, closeConn := Helpers.GetConnect()
 	defer closeConn()
 	dbName := Helpers.GetConfig().DbName
@@ -130,7 +131,7 @@ func InsertUser(user models.User) error {
 	return nil
 }
 
-func (_ mongoDb) CreateUser(dto dtos.NewUserDto) (models.User, error) {
+func (_ MongoDb) CreateUser(dto dtos.NewUserDto) (models.User, error) {
 	_, err := GetUser(dto.Username)
 	if !errors.Is(err, mongo.ErrNoDocuments) {
 		return models.User{}, fmt.Errorf("User %s already exists", dto.Username)
@@ -141,12 +142,27 @@ func (_ mongoDb) CreateUser(dto dtos.NewUserDto) (models.User, error) {
 		return models.User{}, err
 	}
 	user := models.NewUser(dto, hashedPassword)
-	if err = InsertUser(user); err != nil {
+	if err = insertUser(user); err != nil {
 		return models.User{}, err
 	}
 	return user, nil
 }
-func (_ mongoDb) Login(dto dtos.UserAuthDto) (models.Certificate, error) {
-	//TODO implement
-	return models.Certificate{}, nil
+
+func (_ MongoDb) Login(dto dtos.UserAuthDto) (models.Certificate, error) {
+	user, err := GetUser(dto.Username)
+	if err != nil {
+		fmt.Println("Error retriving a user %s \n%s", dto.Username, err)
+	}
+
+	if user.Username == dto.Username {
+		if Helpers.CheckPasswordHash(dto.Password, user.Password) {
+			cert, err := GenerateCertificate(user)
+			if err != nil {
+				return models.Certificate{}, err
+			}
+			return cert, nil
+		}
+	}
+
+	return models.Certificate{}, fmt.Errorf("User %s not found", dto.Username)
 }
