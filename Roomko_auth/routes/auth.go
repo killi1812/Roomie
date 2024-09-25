@@ -19,7 +19,7 @@ func AuthAddRoutes(router *httprouter.Router) {
 	router.POST(fmt.Sprintf("%s/register", baseRoute), register)
 }
 
-var userService Services.UserService = Services.FileDb{}
+var userService Services.UserService = Services.MongoDb{}
 
 func ping(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	w.WriteHeader(http.StatusCreated)
