@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="GetPublicKey" type="ShConfigurationType">
-    <option name="SCRIPT_TEXT" value="curl -X GET http://localhost:8832/api/v1/auth/public-key" />
+    <option name="SCRIPT_TEXT" value="curl -k -X GET https://localhost:8832/api/v1/auth/public-key" />
     <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
     <option name="SCRIPT_PATH" value="" />
     <option name="SCRIPT_OPTIONS" value="" />

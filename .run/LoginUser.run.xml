@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="LoginUser" type="ShConfigurationType">
-    <option name="SCRIPT_TEXT" value="curl -X POST http://localhost:8832/api/v1/auth/login -H &quot;Content-Type: application/json&quot; -d '{&quot;username&quot;:&quot;TestUser&quot;, &quot;password&quot;:&quot;Pa$$w0rd&quot;}'" />
+    <option name="SCRIPT_TEXT" value="curl -k -X POST https://localhost:8832/api/v1/auth/login -H &quot;Content-Type: application/json&quot; -d '{&quot;username&quot;:&quot;TestUser&quot;, &quot;password&quot;:&quot;Pa$$w0rd&quot;}'" />
     <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
     <option name="SCRIPT_PATH" value="" />
     <option name="SCRIPT_OPTIONS" value="" />
