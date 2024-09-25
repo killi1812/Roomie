@@ -19,6 +19,7 @@ func main() {
 	auth.AuthAddRoutes(router)
 	auth.PagesAddRoutes(router)
 	config := Helpers.GetConfig()
+	fmt.Println("Server is starting")
 	err = http.ListenAndServeTLS(fmt.Sprintf(":%d", config.Port), "keys/Https_cert.pem", "keys/Https_key.pem", router)
 
 	if err != nil {
