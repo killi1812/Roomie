@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Roomko_auth" type="GoApplicationRunConfiguration" factoryName="Go Application">
+  <configuration default="false" name="auth" type="GoApplicationRunConfiguration" factoryName="Go Application">
     <module name="Roomko" />
     <working_directory value="$PROJECT_DIR$/Roomko_auth/build" />
     <kind value="PACKAGE" />
