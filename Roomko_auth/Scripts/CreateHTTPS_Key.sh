@@ -1,19 +1,23 @@
 #!/bin/bash
-# Check if the build directory exists
-if [ ! -d "./../build" ]; then
-  mkdir ./build
-  echo "Created directory: build"
+
+output_dir=${1:-.}
+
+
+# Check if the output directory exists
+if [ ! -d "$output_dir" ]; then
+  mkdir -p "$output_dir"
+  echo "Created directory: $output_dir"
 fi
 
-# Check if the build/keys directory exists
-if [ ! -d "./../build/keys" ]; then
-  mkdir ./build/keys
-  echo "Created directory: build/keys"
+# Check if the keys directory exists
+keys_dir="$output_dir/keys"
+if [ ! -d "$keys_dir" ]; then
+  mkdir -p "$keys_dir"
+  echo "Created directory: $keys_dir"
 fi
 
 # TODO create them even though they exist
-if [ ! -d "./../build/keys/Https_key.pem" ]; then
+if [ ! -f "$keys_dir/Https_key.pem" ]; then
   echo "Creating HTTPS key"
-  openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout ./../build/keys/Https_key.pem -out ./../build/keys/Https_cert.pem
+  openssl req -x509 -newkey rsa:4096 -keyout "$keys_dir/Https_key.pem" -out "$keys_dir/Https_cert.pem" -days 365 -subj "/C=HR/ST=Zagreb/L=Zagreb/O=Roomko/CN=Roomko.com" -nodes
 fi
-

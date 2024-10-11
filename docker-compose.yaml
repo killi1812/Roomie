@@ -1,15 +1,19 @@
 version: "3.8"
 
 services:
-  #  roomko_auth:
-  #    build:
-  #      context: ./Roomko_auth
-  #      dockerfile: Dockerfile
-  #    ports:
-  #      - "8832:8832"
-  #    networks:
-  #      - roomko_network
-
+  roomko_auth:
+    build:
+      context: ./Roomko_auth
+      dockerfile: Dockerfile
+    ports:
+      - "8832:8832"
+    networks:
+      - roomko_network
+    depends_on:
+      - mongo
+  
+  
+  
   #  roomko_server:
   #    build:
   #      context: ./Roomko_server
@@ -23,6 +27,8 @@ services:
     image: mongo
     ports:
       - "27017:27017"
+    networks:
+      - roomko_network
 
 networks:
   roomko_network:
